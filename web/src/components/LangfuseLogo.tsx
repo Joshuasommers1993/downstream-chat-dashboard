@@ -17,7 +17,7 @@ export const LangfuseIcon = ({
     src={`${env.NEXT_PUBLIC_BASE_PATH ?? ""}/icon.svg`}
     width={size}
     height={size}
-    alt="Langfuse Icon"
+    alt="Downstream Icon"
     className={className}
   />
 );
@@ -65,7 +65,7 @@ const LangfuseLogotypeOrCustomized = ({ size }: { size: "sm" | "xl" }) => {
           size === "sm" ? "text-sm" : "text-xl",
         )}
       >
-        Langfuse
+        Downstream
       </span>
     </div>
   );
