@@ -73,11 +73,14 @@ const nextConfig = {
     browserToTerminal: true,
   },
   experimental: {
+    cpus: 2,
     turbopackFileSystemCacheForBuild: true,
   },
 
   /**
-   * If you have `experimental: { appDir: true }` set, then you must comment the below `i18n` config
+   * If you have `experimental: {
+    cpus: 2,
+    appDir: true }` set, then you must comment the below `i18n` config
    * out.
    *
    * @see https://github.com/vercel/next.js/issues/41980
