@@ -42,10 +42,6 @@ export function PromptsOnboarding({ projectId }: { projectId: string }) {
         label: "Create Prompt",
         href: `/project/${projectId}/prompts/new`,
       }}
-      secondaryAction={{
-        label: "Learn More",
-        href: "https://langfuse.com/docs/prompt-management/get-started",
-      }}
     />
   );
 }
