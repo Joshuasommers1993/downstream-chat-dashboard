@@ -87,6 +87,6 @@
     "tsx": "^4.20.5",
     "typescript": "^5.7.2",
     "vitest": "^4.1.2",
-    "wait-for-expect": "^3.0.2"
+    "wait-for-expect": "^4.0.0"
   }
 }
