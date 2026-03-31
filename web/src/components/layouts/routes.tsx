@@ -3,7 +3,6 @@ import { type ProjectScope } from "@/src/features/rbac/constants/projectAccessRi
 import {
   Database,
   LayoutDashboard,
-  LifeBuoy,
   ListTree,
   type LucideIcon,
   Settings,
@@ -24,8 +23,6 @@ import { type ReactNode } from "react";
 import { type Entitlement } from "@/src/features/entitlements/constants/entitlements";
 import { type User } from "next-auth";
 import { type OrganizationScope } from "@/src/features/rbac/constants/organizationAccessRights";
-import { SupportButton } from "@/src/components/nav/support-button";
-import { BookACallButton } from "@/src/components/nav/book-a-call-button";
 import { V4BetaSidebarToggle } from "@/src/features/events/components/V4BetaSidebarToggle";
 import { SidebarMenuButton } from "@/src/components/ui/sidebar";
 import { useCommandMenu } from "@/src/features/command-k-menu/CommandMenuProvider";
@@ -222,19 +219,6 @@ export const ROUTES: Route[] = [
     pathname: "/organization/[organizationId]/settings",
     icon: Settings,
     section: RouteSection.Secondary,
-  },
-  {
-    title: "Book a call",
-    section: RouteSection.Secondary,
-    pathname: "",
-    menuNode: <BookACallButton />,
-  },
-  {
-    title: "Support",
-    icon: LifeBuoy,
-    section: RouteSection.Secondary,
-    pathname: "", // Empty pathname since this is a dropdown
-    menuNode: <SupportButton />,
   },
 ];
 

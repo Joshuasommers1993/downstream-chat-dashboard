@@ -118,7 +118,6 @@ export function AuthenticatedLayout({
     items: [
       { name: "Account Settings", href: "/account/settings" },
       { name: "Theme", onClick: () => {}, content: <ThemeToggle /> },
-      { name: "Sign out", onClick: onSignOut },
     ],
   };
 
