@@ -122,7 +122,7 @@
     "ioredis": "^5.8.2",
     "ip-address": "^9.0.5",
     "json-schema-faker": "^0.5.9",
-    "langchain": "^1.2.15",
+    "langchain": "^1.2.39",
     "langfuse": "3.38.4",
     "lodash": "^4.17.23",
     "lucide-react": "^0.552.0",
