@@ -705,8 +705,8 @@ importers:
         specifier: ^2.0.7
         version: 2.0.7(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       stripe:
-        specifier: ^18.5.0
-        version: 18.5.0(@types/node@24.3.0)
+        specifier: ^21.0.1
+        version: 21.0.1(@types/node@24.3.0)
       superjson:
         specifier: 2.2.2
         version: 2.2.2
@@ -940,8 +940,8 @@ importers:
         specifier: ^5.8.4
         version: 5.8.4
       stripe:
-        specifier: ^17.4.0
-        version: 17.4.0
+        specifier: ^21.0.1
+        version: 21.0.1(@types/node@24.3.0)
       tiktoken:
         specifier: ^1.0.20
         version: 1.0.20
@@ -10561,15 +10561,11 @@ packages:
     resolution: {integrity: sha512-6fPc+R4ihwqP6N/aIv2f1gMH8lOVtWQHoqC4yK6oSDVVocumAsfCqjkXnqiYMhmMwS/mEHLp7Vehlt3ql6lEig==}
     engines: {node: '>=8'}
 
-  stripe@17.4.0:
-    resolution: {integrity: sha512-sQQGZguPxe7/QYXJKtDpfzT2OAH9F8nyE2SOsVdTU793iiU33/dpaKgWaJEGJm8396Yy/6NvTLblgdHlueGLhA==}
-    engines: {node: '>=12.*'}
-
-  stripe@18.5.0:
-    resolution: {integrity: sha512-Hp+wFiEQtCB0LlNgcFh5uVyKznpDjzyUZ+CNVEf+I3fhlYvh7rZruIg+jOwzJRCpy0ZTPMjlzm7J2/M2N6d+DA==}
-    engines: {node: '>=12.*'}
+  stripe@21.0.1:
+    resolution: {integrity: sha512-ocv0j7dWttswDWV2XL/kb6+yiLpDXNXL3RQAOB5OB2kr49z0cEatdQc12+zP/j5nrXk6rAsT4N3y/NUvBbK7Pw==}
+    engines: {node: '>=18'}
     peerDependencies:
-      '@types/node': '>=12.x.x'
+      '@types/node': '>=18'
     peerDependenciesMeta:
       '@types/node':
         optional: true
@@ -22810,14 +22806,7 @@ snapshots:
 
   strip-json-comments@3.1.1: {}
 
-  stripe@17.4.0:
-    dependencies:
-      '@types/node': 24.3.0
-      qs: 6.14.1
-
-  stripe@18.5.0(@types/node@24.3.0):
-    dependencies:
-      qs: 6.14.1
+  stripe@21.0.1(@types/node@24.3.0):
     optionalDependencies:
       '@types/node': 24.3.0
 
