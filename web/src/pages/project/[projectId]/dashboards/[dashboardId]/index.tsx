@@ -419,11 +419,7 @@ export default function DashboardDetail() {
         withPadding
         scrollable
         headerProps={{
-          title:
-            (dashboard.data?.name || "Dashboard") +
-            (dashboard.data?.owner === "LANGFUSE"
-              ? " (Langfuse Maintained)"
-              : ""),
+          title: dashboard.data?.name || "Dashboard",
           breadcrumb: [
             {
               name: "Dashboards",

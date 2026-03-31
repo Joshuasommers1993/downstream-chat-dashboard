@@ -338,10 +338,7 @@ export function DashboardWidget({
     >
       <div className="flex items-center justify-between">
         <span className="truncate font-medium" title={widget.data.name}>
-          {widget.data.name}{" "}
-          {dashboardOwner === "PROJECT" && widget.data.owner === "LANGFUSE"
-            ? " ( 🪢 )"
-            : null}
+          {widget.data.name}
         </span>
         <div className="flex space-x-2">
           {hasCUDAccess && (
