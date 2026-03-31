@@ -61,7 +61,7 @@
     "lodash": "^4.17.23",
     "p-limit": "^7.3.0",
     "pg": "^8.13.0",
-    "posthog-node": "^5.8.4",
+    "posthog-node": "^5.28.9",
     "stripe": "^17.4.0",
     "tiktoken": "^1.0.20",
     "uuid": "^9.0.1",

@@ -630,8 +630,8 @@ importers:
         specifier: ^1.273.1
         version: 1.273.1
       posthog-node:
-        specifier: ^5.8.4
-        version: 5.8.4
+        specifier: ^5.28.9
+        version: 5.28.9(rxjs@7.8.2)
       prexit:
         specifier: ^2.2.0
         version: 2.2.0
@@ -937,8 +937,8 @@ importers:
         specifier: ^8.13.0
         version: 8.13.0
       posthog-node:
-        specifier: ^5.8.4
-        version: 5.8.4
+        specifier: ^5.28.9
+        version: 5.28.9(rxjs@7.8.2)
       stripe:
         specifier: ^17.4.0
         version: 17.4.0
@@ -3530,11 +3530,11 @@ packages:
   '@popperjs/core@2.11.8':
     resolution: {integrity: sha512-P1st0aksCrn9sGZhp8GMYwBnQsbvAWsZAX44oXNNvLHGqAOcoVxmjZiohstwQ7SqKnbR47akdNi+uleWD8+g6A==}
 
-  '@posthog/core@1.0.2':
-    resolution: {integrity: sha512-hWk3rUtJl2crQK0WNmwg13n82hnTwB99BT99/XI5gZSvIlYZ1TPmMZE8H2dhJJ98J/rm9vYJ/UXNzw3RV5HTpQ==}
-
   '@posthog/core@1.2.2':
     resolution: {integrity: sha512-f16Ozx6LIigRG+HsJdt+7kgSxZTHeX5f1JlCGKI1lXcvlZgfsCR338FuMI2QRYXGl+jg/vYFzGOTQBxl90lnBg==}
+
+  '@posthog/core@1.24.4':
+    resolution: {integrity: sha512-S+TolwBHSSJz7WWtgaELQWQqXviSm3uf1e+qorWUts0bZcgPwWzhnmhCUZAhvn0NVpTQHDJ3epv+hHbPLl5dHg==}
 
   '@prisma/client@6.17.1':
     resolution: {integrity: sha512-zL58jbLzYamjnNnmNA51IOZdbk5ci03KviXCuB0Tydc9btH2kDWsi1pQm2VecviRTM7jGia0OPPkgpGnT3nKvw==}
@@ -9693,9 +9693,14 @@ packages:
       rrweb-snapshot:
         optional: true
 
-  posthog-node@5.8.4:
-    resolution: {integrity: sha512-O0lObQqeIiggNCjc5BQx5PaHqPzXxwKnCJdb+DuNkbDO6Vc442SQ5FDv0WjPd5Ejfwme1uGZmM5/xhHWKegFfQ==}
-    engines: {node: '>=20'}
+  posthog-node@5.28.9:
+    resolution: {integrity: sha512-iZWyAYkIAq5QqcYz4q2nXOX+Ivn04Yh8AuKqfFVw0SvBpfli49bNAjyE97qbRTLr+irrzRUELgGIkDC14NgugA==}
+    engines: {node: ^20.20.0 || >=22.22.0}
+    peerDependencies:
+      rxjs: ^7.0.0
+    peerDependenciesMeta:
+      rxjs:
+        optional: true
 
   pprof-format@2.1.0:
     resolution: {integrity: sha512-0+G5bHH0RNr8E5hoZo/zJYsL92MhkZjwrHp3O2IxmY8RJL9ooKeuZ8Tm0ZNBw5sGZ9TiM71sthTjWoR2Vf5/xw==}
@@ -14664,9 +14669,11 @@ snapshots:
 
   '@popperjs/core@2.11.8': {}
 
-  '@posthog/core@1.0.2': {}
-
   '@posthog/core@1.2.2': {}
+
+  '@posthog/core@1.24.4':
+    dependencies:
+      cross-spawn: 7.0.6
 
   '@prisma/client@6.17.1(prisma@6.17.1(magicast@0.5.2)(typescript@5.9.2))(typescript@5.9.2)':
     optionalDependencies:
@@ -21780,9 +21787,11 @@ snapshots:
       preact: 10.28.2
       web-vitals: 4.2.4
 
-  posthog-node@5.8.4:
+  posthog-node@5.28.9(rxjs@7.8.2):
     dependencies:
-      '@posthog/core': 1.0.2
+      '@posthog/core': 1.24.4
+    optionalDependencies:
+      rxjs: 7.8.2
 
   pprof-format@2.1.0: {}
 
