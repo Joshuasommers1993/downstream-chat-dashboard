@@ -25,7 +25,6 @@ import {
 } from "@/src/components/ui/dropdown-menu";
 import { DeleteDashboardButton } from "@/src/components/deleteButton";
 import { EditDashboardDialog } from "@/src/features/dashboard/components/EditDashboardDialog";
-import { User as UserIcon } from "lucide-react";
 import { useRouter } from "next/router";
 
 type DashboardTableRow = {
@@ -189,25 +188,6 @@ export function DashboardTable() {
       size: 300,
       cell: (row) => {
         return row.getValue();
-      },
-    }),
-    columnHelper.display({
-      id: "ownerTag",
-      header: "Owner",
-      size: 80,
-      cell: (row) => {
-        return row.row.original.owner === "LANGFUSE" ? (
-          <span className="flex gap-1 px-2 py-0.5 text-xs">
-            <span role="img" aria-label="Langfuse">
-              🪢
-            </span>
-            Langfuse
-          </span>
-        ) : (
-          <span className="flex gap-1 px-2 py-0.5 text-xs">
-            <UserIcon className="h-3 w-3" /> Project
-          </span>
-        );
       },
     }),
     columnHelper.accessor("createdAt", {

@@ -241,30 +241,7 @@ export default function Dashboard() {
             </>
           ),
           actionButtonsRight: (
-            <>
-              {uiCustomization?.feedbackHref === undefined && (
-                <FeedbackButtonWrapper
-                  title="Request Chart"
-                  description="Your feedback matters! Let the Langfuse team know what additional data or metrics you'd like to see in your dashboard."
-                  className="hidden lg:flex"
-                >
-                  <Button
-                    id="date"
-                    variant={"outline"}
-                    className={
-                      "text-primary hover:bg-primary-foreground hover:text-primary-accent group justify-start gap-x-3 text-left font-semibold"
-                    }
-                  >
-                    <BarChart2
-                      className="text-primary group-hover:text-primary-accent hidden h-6 w-6 shrink-0 lg:block"
-                      aria-hidden="true"
-                    />
-                    Request Chart
-                  </Button>
-                </FeedbackButtonWrapper>
-              )}
-              <SetupTracingButton />
-            </>
+            <SetupTracingButton />
           ),
         }}
       >
