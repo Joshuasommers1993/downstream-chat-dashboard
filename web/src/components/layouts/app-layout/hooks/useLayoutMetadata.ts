@@ -28,12 +28,10 @@ export function useLayoutMetadata(
     const basePath = env.NEXT_PUBLIC_BASE_PATH ?? "";
 
     // Determine page title from active route
-    const title = activePathName ? `${activePathName} | Langfuse` : "Langfuse";
+    const title = activePathName ? activePathName : "Downstream";
 
     // Use dev favicon in DEV region for visual distinction
-    // Using SVG for modern browsers with PNG fallback specified in sizes
-    const faviconPath =
-      region === "DEV" ? `${basePath}/icon-dev.svg` : `${basePath}/icon.svg`;
+    const faviconPath = `${basePath}/icon.png`;
 
     return {
       title,
