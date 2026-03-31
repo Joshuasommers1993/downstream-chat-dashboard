@@ -155,7 +155,7 @@ export const getProjectSettingsPages = ({
         <LlmApiKeyList projectId={project.id} />
       </div>
     ),
-    show: showLLMConnectionsSettings,
+    show: false,
   },
   {
     title: "Model Definitions",
