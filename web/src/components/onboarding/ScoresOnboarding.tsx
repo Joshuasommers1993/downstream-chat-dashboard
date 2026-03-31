@@ -38,10 +38,6 @@ export function ScoresOnboarding() {
       title="Get Started with Scores"
       description="Scores allow you to evaluate the quality/safety of your LLM application through user feedback, model-based evaluations, or manual review. Scores can be used programmatically via the API and SDKs to track custom metrics."
       valuePropositions={valuePropositions}
-      secondaryAction={{
-        label: "Learn More",
-        href: "https://langfuse.com/docs/evaluation/evaluation-methods/custom-scores",
-      }}
       videoSrc="https://static.langfuse.com/prod-assets/onboarding/scores-overview-v1.mp4"
     />
   );

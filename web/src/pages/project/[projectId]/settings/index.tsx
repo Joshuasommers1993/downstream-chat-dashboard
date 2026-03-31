@@ -155,7 +155,7 @@ export const getProjectSettingsPages = ({
         <LlmApiKeyList projectId={project.id} />
       </div>
     ),
-    show: showLLMConnectionsSettings,
+    show: false,
   },
   {
     title: "Model Definitions",
@@ -202,6 +202,7 @@ export const getProjectSettingsPages = ({
     slug: "integrations",
     cmdKKeywords: ["posthog", "mixpanel", "analytics"],
     content: <Integrations projectId={project.id} />,
+    show: false,
   },
   {
     title: "Exports",
