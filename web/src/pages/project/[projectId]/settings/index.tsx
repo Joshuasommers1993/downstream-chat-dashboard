@@ -162,6 +162,7 @@ export const getProjectSettingsPages = ({
     slug: "models",
     cmdKKeywords: ["cost", "token"],
     content: <ModelsSettings projectId={project.id} />,
+    show: false,
   },
   {
     title: "Protected Prompt Labels",

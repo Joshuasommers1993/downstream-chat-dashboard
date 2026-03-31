@@ -14,7 +14,7 @@ export const LangfuseIcon = ({
 }) => (
   // eslint-disable-next-line @next/next/no-img-element
   <img
-    src={`${env.NEXT_PUBLIC_BASE_PATH ?? ""}/icon.svg`}
+    src={`${env.NEXT_PUBLIC_BASE_PATH ?? ""}/icon.png`}
     width={size}
     height={size}
     alt="Downstream Icon"
@@ -92,9 +92,6 @@ export const LangfuseLogo = ({
         <Link href="/" className="flex items-center">
           <LangfuseLogotypeOrCustomized size={size} />
         </Link>
-        {version && (
-          <VersionLabel className="ml-2 group-data-[collapsible=icon]:hidden" />
-        )}
       </div>
     </div>
   );
