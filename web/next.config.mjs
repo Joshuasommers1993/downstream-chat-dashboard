@@ -74,6 +74,7 @@ const nextConfig = {
   },
   experimental: {
     turbopackFileSystemCacheForBuild: true,
+    cpus: 2,
   },
 
   /**
