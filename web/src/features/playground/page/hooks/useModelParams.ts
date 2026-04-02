@@ -306,5 +306,8 @@ function getDefaultAdapterParams(
         maxReasoningTokens: { value: 0, enabled: false },
         providerOptions: { value: {}, enabled: false },
       };
+
+    default:
+      throw new Error(`Unsupported adapter: ${adapter}`);
   }
 }
