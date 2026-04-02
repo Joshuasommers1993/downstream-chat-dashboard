@@ -302,7 +302,10 @@ export async function fetchLLMCompletion(
         chatModel.temperature = undefined;
       }
     }
-  } else if (modelParams.adapter === LLMAdapter.OpenAI) {
+  } else if (
+    modelParams.adapter === LLMAdapter.OpenAI ||
+    modelParams.adapter === LLMAdapter.Downstream
+  ) {
     const processedBaseURL = processOpenAIBaseURL({
       url: baseURL,
       modelName: modelParams.model,

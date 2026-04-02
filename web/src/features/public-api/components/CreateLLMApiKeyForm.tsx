@@ -217,6 +217,8 @@ export function CreateLLMApiKeyForm({
         return customization?.defaultBaseUrlAzure ?? "";
       case LLMAdapter.Anthropic:
         return customization?.defaultBaseUrlAnthropic ?? "";
+      case LLMAdapter.Downstream:
+        return "https://chat.trydownstream.com/api/agents/v1";
       default:
         return "";
     }

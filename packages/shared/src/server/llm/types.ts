@@ -252,6 +252,7 @@ export enum LLMAdapter {
   Bedrock = "bedrock",
   VertexAI = "google-vertex-ai",
   GoogleAIStudio = "google-ai-studio",
+  Downstream = "downstream",
 }
 
 export const TextPromptContentSchema = z.string().min(1, "Enter a prompt");
