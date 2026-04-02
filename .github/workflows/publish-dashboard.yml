@@ -1,4 +1,4 @@
-name: Publish Dashboard Image
+name: Build & Deploy Dashboard
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-and-push:
+  build:
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -37,8 +37,30 @@ jobs:
           file: ./web/Dockerfile
           push: true
           platforms: linux/amd64
-          tags: ghcr.io/trash-gurus/downstream-chat-dashboard:latest
+          tags: |
+            ghcr.io/trash-gurus/downstream-chat-dashboard:latest
+            ghcr.io/trash-gurus/downstream-chat-dashboard:${{ github.sha }}
           build-args: |
             NEXT_PUBLIC_BASE_PATH=/dashboard
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Install SSH Key
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.DROPLET_SSH_PRIVATE_KEY }}
+          known_hosts: ${{ secrets.DROPLET_KNOWN_HOSTS }}
+
+      - name: Deploy
+        run: |
+          ssh -o StrictHostKeyChecking=no root@${{ secrets.DROPLET_HOST }} << 'DEPLOY'
+          set -e
+          cd /opt/downstream-chat-dashboard
+          docker compose pull
+          docker compose up -d --force-recreate
+          echo "Deploy complete"
+          DEPLOY
