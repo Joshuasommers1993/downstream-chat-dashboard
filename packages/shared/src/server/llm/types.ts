@@ -495,6 +495,7 @@ export const supportedModels = {
   [LLMAdapter.GoogleAIStudio]: googleAIStudioModels,
   [LLMAdapter.Azure]: [],
   [LLMAdapter.Bedrock]: [],
+  [LLMAdapter.Downstream]: [],
 } as const;
 
 export type LLMFunctionCall = {
