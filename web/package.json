@@ -118,7 +118,7 @@
     "dompurify": "^3.3.3",
     "fastest-levenshtein": "^1.0.16",
     "graphql": "^16.13.2",
-    "https-proxy-agent": "^7.0.6",
+    "https-proxy-agent": "^9.0.0",
     "ioredis": "^5.8.2",
     "ip-address": "^9.0.5",
     "json-schema-faker": "^0.5.9",
