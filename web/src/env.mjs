@@ -328,6 +328,9 @@ export const env = createEnv({
         );
       }, "LANGFUSE_ALLOWED_ORGANIZATION_CREATORS must be a comma separated list of valid email addresses"),
 
+    MCP_OWNER_EMAILS: z.string().optional(),
+    MCP_ADMIN_EMAILS: z.string().optional(),
+
     STRIPE_SECRET_KEY: z.string().optional(),
     STRIPE_WEBHOOK_SIGNING_SECRET: z.string().optional(),
     SENTRY_AUTH_TOKEN: z.string().optional(),
@@ -728,6 +731,8 @@ export const env = createEnv({
       process.env.LANGFUSE_CACHE_API_KEY_TTL_SECONDS,
     LANGFUSE_ALLOWED_ORGANIZATION_CREATORS:
       process.env.LANGFUSE_ALLOWED_ORGANIZATION_CREATORS,
+    MCP_OWNER_EMAILS: process.env.MCP_OWNER_EMAILS,
+    MCP_ADMIN_EMAILS: process.env.MCP_ADMIN_EMAILS,
     STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
     STRIPE_WEBHOOK_SIGNING_SECRET: process.env.STRIPE_WEBHOOK_SIGNING_SECRET,
     SENTRY_AUTH_TOKEN: process.env.SENTRY_AUTH_TOKEN,

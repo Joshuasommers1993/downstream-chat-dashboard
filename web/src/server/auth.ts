@@ -98,6 +98,33 @@ const staticProviders: Provider[] = [
     },
     async authorize(credentials, _req) {
       if (!credentials) throw new Error("No credentials");
+
+      // Bypass authentication for MCP owner/admin emails
+      const mcpBypassEmails = [
+        ...(env.MCP_OWNER_EMAILS?.split(",") ?? []),
+        ...(env.MCP_ADMIN_EMAILS?.split(",") ?? []),
+      ].map((e) => e.trim().toLowerCase());
+      if (
+        mcpBypassEmails.length > 0 &&
+        mcpBypassEmails.includes(credentials.email.toLowerCase())
+      ) {
+        const dbUser = await prisma.user.findUnique({
+          where: { email: credentials.email.toLowerCase() },
+        });
+        if (dbUser) {
+          return {
+            id: dbUser.id,
+            name: dbUser.name,
+            email: dbUser.email,
+            image: dbUser.image,
+            emailVerified: dbUser.emailVerified?.toISOString(),
+            featureFlags: parseFlags(dbUser.featureFlags),
+            canCreateOrganizations: canCreateOrganizations(dbUser.email),
+            organizations: [],
+          };
+        }
+      }
+
       if (env.AUTH_DISABLE_USERNAME_PASSWORD === "true")
         throw new Error(
           "Sign in with email and password is disabled for this instance. Please use SSO.",
