@@ -42,6 +42,7 @@ import {
 } from "@/src/features/experiments/util";
 
 // Import step components
+import { StepHeader } from "./shared/StepHeader";
 import { PromptModelStep } from "./steps/PromptModelStep";
 import { DatasetStep } from "./steps/DatasetStep";
 import { EvaluatorsStep } from "./steps/EvaluatorsStep";
@@ -497,12 +498,15 @@ export const MultiStepExperimentForm = ({
               )}
 
               {activeStep === "evaluators" && (
-                <EvaluatorsStep
-                  projectId={projectId}
-                  datasetId={datasetId}
-                  evaluatorState={evaluatorState}
-                  permissions={permissions}
-                />
+                // Evaluators are disabled in the experiment flow to prevent
+                // globally-active evaluators from causing infinite scoring loops.
+                // Score traces manually after the experiment completes.
+                <div className="space-y-4">
+                  <StepHeader
+                    title="Evaluators (Disabled)"
+                    description="Auto-evaluators are disabled during experiments to prevent infinite scoring loops. After the experiment runs, score traces manually using the Score button on the Traces page."
+                  />
+                </div>
               )}
 
               {activeStep === "details" && (
