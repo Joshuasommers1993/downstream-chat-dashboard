@@ -67,12 +67,15 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no root@${{ secrets.DROPLET_HOST }} << 'DEPLOY'
           set -e
+          # Find the working directory of the existing langfuse-web container
+          COMPOSE_DIR=$(docker inspect langfuse-web --format '{{ index .Config.Labels "com.docker.compose.project.working_dir" }}')
+          echo "Deploying from: $COMPOSE_DIR"
           # Pull latest compose file from dashboard repo
           cd /opt/downstream-chat-dashboard
           git pull origin main
-          cp deploy-compose.yml /opt/downstream-chat/deploy-compose.yml
-          # Deploy from the original project directory so container names/networks match
-          cd /opt/downstream-chat
+          cp deploy-compose.yml "$COMPOSE_DIR/deploy-compose.yml"
+          # Deploy from the original project directory
+          cd "$COMPOSE_DIR"
           docker compose -f deploy-compose.yml pull langfuse-web
           docker compose -f deploy-compose.yml up -d --force-recreate langfuse-web
           echo "Deploy complete"
