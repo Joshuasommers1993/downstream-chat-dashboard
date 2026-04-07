@@ -1,0 +1,223 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.multi
+      target: api-build
+    container_name: LibreChat-API
+    depends_on:
+    - mongodb
+    - rag_api
+    restart: always
+    extra_hosts:
+    - host.docker.internal:host-gateway
+    env_file:
+    - .env
+    environment:
+    - HOST=0.0.0.0
+    - NODE_ENV=production
+    - MONGO_URI=mongodb://mongodb:27017/LibreChat
+    - MEILI_HOST=http://meilisearch:7700
+    - RAG_PORT=${RAG_PORT:-8000}
+    - RAG_API_URL=http://rag_api:${RAG_PORT:-8000}
+    volumes:
+    - type: bind
+      source: ./librechat.yaml
+      target: /app/librechat.yaml
+    - ./images:/app/client/public/images
+    - ./uploads:/app/uploads
+    - ./logs:/app/api/logs
+  client:
+    image: nginx:1.27.0-alpine
+    container_name: LibreChat-NGINX
+    ports:
+    - 80:80
+    - 443:443
+    depends_on:
+    - api
+    restart: always
+    volumes:
+    - ./client/nginx.conf:/etc/nginx/conf.d/default.conf
+    - ./ssl:/etc/nginx/ssl:ro
+  mongodb:
+    container_name: chat-mongodb
+    image: mongo:8.0.17
+    restart: always
+    volumes:
+    - ./data-node:/data/db
+    command: mongod --noauth
+  meilisearch:
+    container_name: chat-meilisearch
+    image: getmeili/meilisearch:v1.35.1
+    restart: always
+    env_file:
+    - .env
+    environment:
+    - MEILI_HOST=http://meilisearch:7700
+    - MEILI_NO_ANALYTICS=true
+    volumes:
+    - ./meili_data_v1.35.1:/meili_data
+  vectordb:
+    image: pgvector/pgvector:0.8.0-pg15-trixie
+    environment:
+      POSTGRES_DB: mydatabase
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+    restart: always
+    volumes:
+    - pgdata2:/var/lib/postgresql/data
+  rag_api:
+    image: registry.librechat.ai/danny-avila/librechat-rag-api-dev-lite:latest
+    environment:
+    - DB_HOST=vectordb
+    - RAG_PORT=${RAG_PORT:-8000}
+    restart: always
+    depends_on:
+    - vectordb
+    env_file:
+    - .env
+  langfuse-db:
+    image: postgres:15-alpine
+    container_name: langfuse-db
+    restart: always
+    environment:
+    - POSTGRES_DB=langfuse
+    - POSTGRES_USER=langfuse
+    - POSTGRES_PASSWORD=${LANGFUSE_DB_PASSWORD}
+    volumes:
+    - langfuse_pgdata:/var/lib/postgresql/data
+  langfuse-clickhouse:
+    image: clickhouse/clickhouse-server:24.12
+    container_name: langfuse-clickhouse
+    restart: always
+    environment:
+    - CLICKHOUSE_DB=default
+    - CLICKHOUSE_USER=clickhouse
+    - CLICKHOUSE_PASSWORD=${LANGFUSE_CLICKHOUSE_PASSWORD}
+    volumes:
+    - ./clickhouse/config.xml:/etc/clickhouse-server/config.d/config.xml
+    - langfuse_clickhouse:/var/lib/clickhouse
+    ulimits:
+      nofile:
+        soft: 262144
+        hard: 262144
+  langfuse-redis:
+    image: redis:7-alpine
+    container_name: langfuse-redis
+    restart: always
+  langfuse-minio:
+    image: minio/minio:latest
+    container_name: langfuse-minio
+    restart: always
+    command: server /data --console-address ":9001"
+    environment:
+    - MINIO_ROOT_USER=${LANGFUSE_MINIO_ROOT_USER:-langfuse}
+    - MINIO_ROOT_PASSWORD=${LANGFUSE_MINIO_ROOT_PASSWORD}
+    volumes:
+    - langfuse_minio:/data
+  langfuse-minio-init:
+    image: minio/mc:latest
+    container_name: langfuse-minio-init
+    depends_on:
+    - langfuse-minio
+    entrypoint: '/bin/sh -c " sleep 5; mc alias set local http://langfuse-minio:9000
+      $${LANGFUSE_MINIO_ROOT_USER:-langfuse} $${LANGFUSE_MINIO_ROOT_PASSWORD}; mc
+      mb --ignore-existing local/langfuse-events; mc mb --ignore-existing local/langfuse-media;
+      exit 0; "
+
+      '
+    environment:
+    - LANGFUSE_MINIO_ROOT_USER=${LANGFUSE_MINIO_ROOT_USER:-langfuse}
+    - LANGFUSE_MINIO_ROOT_PASSWORD=${LANGFUSE_MINIO_ROOT_PASSWORD}
+  langfuse-web:
+    image: ghcr.io/trash-gurus/downstream-chat-dashboard:latest
+    container_name: langfuse-web
+    restart: always
+    ports:
+    - 127.0.0.1:3001:3000
+    depends_on:
+    - langfuse-db
+    - langfuse-clickhouse
+    - langfuse-redis
+    - langfuse-minio
+    environment:
+    - DATABASE_URL=postgresql://langfuse:${LANGFUSE_DB_PASSWORD}@langfuse-db:5432/langfuse
+    - CLICKHOUSE_MIGRATION_URL=clickhouse://langfuse-clickhouse:9000
+    - CLICKHOUSE_URL=http://langfuse-clickhouse:8123
+    - CLICKHOUSE_USER=clickhouse
+    - CLICKHOUSE_PASSWORD=${LANGFUSE_CLICKHOUSE_PASSWORD}
+    - REDIS_HOST=langfuse-redis
+    - REDIS_PORT=6379
+    - LANGFUSE_S3_EVENT_UPLOAD_BUCKET=langfuse-events
+    - LANGFUSE_S3_EVENT_UPLOAD_REGION=us-east-1
+    - LANGFUSE_S3_EVENT_UPLOAD_ENDPOINT=http://langfuse-minio:9000
+    - LANGFUSE_S3_EVENT_UPLOAD_ACCESS_KEY_ID=${LANGFUSE_MINIO_ROOT_USER:-langfuse}
+    - LANGFUSE_S3_EVENT_UPLOAD_SECRET_ACCESS_KEY=${LANGFUSE_MINIO_ROOT_PASSWORD}
+    - LANGFUSE_S3_EVENT_UPLOAD_FORCE_PATH_STYLE=true
+    - LANGFUSE_S3_MEDIA_UPLOAD_BUCKET=langfuse-media
+    - LANGFUSE_S3_MEDIA_UPLOAD_REGION=us-east-1
+    - LANGFUSE_S3_MEDIA_UPLOAD_ENDPOINT=http://langfuse-minio:9000
+    - LANGFUSE_S3_MEDIA_UPLOAD_ACCESS_KEY_ID=${LANGFUSE_MINIO_ROOT_USER:-langfuse}
+    - LANGFUSE_S3_MEDIA_UPLOAD_SECRET_ACCESS_KEY=${LANGFUSE_MINIO_ROOT_PASSWORD}
+    - LANGFUSE_S3_MEDIA_UPLOAD_FORCE_PATH_STYLE=true
+    - NEXTAUTH_URL=https://chat.trydownstream.com/dashboard
+    - HOSTNAME=0.0.0.0
+    - LANGFUSE_BASEPATH=/dashboard
+    - NEXTAUTH_SECRET=${LANGFUSE_NEXTAUTH_SECRET}
+    - SALT=${LANGFUSE_SALT}
+    - ENCRYPTION_KEY=${LANGFUSE_ENCRYPTION_KEY}
+    - LANGFUSE_INIT_ORG_ID=downstream
+    - LANGFUSE_INIT_ORG_NAME=Downstream
+    - LANGFUSE_INIT_PROJECT_ID=librechat
+    - LANGFUSE_INIT_PROJECT_NAME=LibreChat
+    - LANGFUSE_INIT_PROJECT_PUBLIC_KEY=${LANGFUSE_PUBLIC_KEY}
+    - LANGFUSE_INIT_PROJECT_SECRET_KEY=${LANGFUSE_SECRET_KEY}
+    - LANGFUSE_INIT_USER_EMAIL=${LANGFUSE_INIT_USER_EMAIL}
+    - LANGFUSE_INIT_USER_NAME=Admin
+    - LANGFUSE_INIT_USER_PASSWORD=${LANGFUSE_INIT_USER_PASSWORD}
+    - LIBRECHAT_JUDGE_API_URL=https://chat.trydownstream.com/api/agents/v1/chat/completions
+    - LIBRECHAT_JUDGE_API_KEY=${LIBRECHAT_JUDGE_API_KEY}
+    - LIBRECHAT_JUDGE_AGENT_ID=agent_zMzZBcyJyLuTbpaJDcnw0
+    networks:
+    - nginx_network
+    - default
+  langfuse-worker:
+    image: langfuse/langfuse-worker:3
+    container_name: langfuse-worker
+    restart: always
+    depends_on:
+    - langfuse-db
+    - langfuse-clickhouse
+    - langfuse-redis
+    - langfuse-minio
+    environment:
+    - DATABASE_URL=postgresql://langfuse:${LANGFUSE_DB_PASSWORD}@langfuse-db:5432/langfuse
+    - CLICKHOUSE_MIGRATION_URL=clickhouse://langfuse-clickhouse:9000
+    - CLICKHOUSE_URL=http://langfuse-clickhouse:8123
+    - CLICKHOUSE_USER=clickhouse
+    - CLICKHOUSE_PASSWORD=${LANGFUSE_CLICKHOUSE_PASSWORD}
+    - REDIS_HOST=langfuse-redis
+    - REDIS_PORT=6379
+    - LANGFUSE_S3_EVENT_UPLOAD_BUCKET=langfuse-events
+    - LANGFUSE_S3_EVENT_UPLOAD_REGION=us-east-1
+    - LANGFUSE_S3_EVENT_UPLOAD_ENDPOINT=http://langfuse-minio:9000
+    - LANGFUSE_S3_EVENT_UPLOAD_ACCESS_KEY_ID=${LANGFUSE_MINIO_ROOT_USER:-langfuse}
+    - LANGFUSE_S3_EVENT_UPLOAD_SECRET_ACCESS_KEY=${LANGFUSE_MINIO_ROOT_PASSWORD}
+    - LANGFUSE_S3_EVENT_UPLOAD_FORCE_PATH_STYLE=true
+    - LANGFUSE_S3_MEDIA_UPLOAD_BUCKET=langfuse-media
+    - LANGFUSE_S3_MEDIA_UPLOAD_REGION=us-east-1
+    - LANGFUSE_S3_MEDIA_UPLOAD_ENDPOINT=http://langfuse-minio:9000
+    - LANGFUSE_S3_MEDIA_UPLOAD_ACCESS_KEY_ID=${LANGFUSE_MINIO_ROOT_USER:-langfuse}
+    - LANGFUSE_S3_MEDIA_UPLOAD_SECRET_ACCESS_KEY=${LANGFUSE_MINIO_ROOT_PASSWORD}
+    - LANGFUSE_S3_MEDIA_UPLOAD_FORCE_PATH_STYLE=true
+    - SALT=${LANGFUSE_SALT}
+    - ENCRYPTION_KEY=${LANGFUSE_ENCRYPTION_KEY}
+volumes:
+  pgdata2: null
+  langfuse_pgdata: null
+  langfuse_clickhouse: null
+  langfuse_minio: null
+networks:
+  nginx_network:
+    name: downstream-chat_default
+    external: true
