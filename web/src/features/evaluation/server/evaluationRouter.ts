@@ -186,7 +186,7 @@ export const evaluationRouter = createTRPCRouter({
                   environment: trace.environment ?? "default",
                   trace_id: trace.id,
                   observation_id: null,
-                  session_id: trace.session_id ?? null,
+                  session_id: trace.sessionId ?? null,
                   name: `${SCORE_PREFIX}_${metric.name}`,
                   value: score,
                   source: ScoreSourceEnum.API,
