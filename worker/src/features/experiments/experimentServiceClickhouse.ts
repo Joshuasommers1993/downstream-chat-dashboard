@@ -31,6 +31,7 @@ import {
 } from "@langfuse/shared";
 import { randomUUID } from "crypto";
 import { createW3CTraceId } from "../utils";
+import { scheduleExperimentObservationEvals } from "./scheduleExperimentEvals";
 
 async function getExistingRunItemDatasetItemIds(
   projectId: string,
@@ -127,7 +128,18 @@ async function processItem(
 
   /********************
    * SCHEDULE EXPERIMENT OBSERVATION EVALS *
+   * Disabled: auto-scoring is turned off to prevent infinite eval loops.
+   * Re-enable by setting EXPERIMENT_AUTO_EVAL=true in the environment.
    ********************/
+  if (process.env.EXPERIMENT_AUTO_EVAL === "true" && llmResult.generationDetails) {
+    await scheduleExperimentObservationEvals({
+      projectId,
+      traceId: newTraceId,
+      datasetItem,
+      config,
+      generationDetails: llmResult.generationDetails,
+    });
+  }
 
   /********************
    * ASYNC RUN ITEM EVAL *
