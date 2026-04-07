@@ -183,7 +183,7 @@ export const evaluationRouter = createTRPCRouter({
                   id: uuidv4(),
                   timestamp: convertDateToClickhouseDateTime(now),
                   project_id: input.projectId,
-                  environment: "default",
+                  environment: trace.environment ?? "default",
                   trace_id: trace.id,
                   observation_id: null,
                   session_id: trace.sessionId ?? null,
