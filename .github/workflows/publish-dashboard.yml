@@ -55,24 +55,11 @@ jobs:
           key: ${{ secrets.DROPLET_SSH_PRIVATE_KEY }}
           known_hosts: ${{ secrets.DROPLET_KNOWN_HOSTS }}
 
-      - name: Inject judge API key into VPS .env
-        run: |
-          ssh -o StrictHostKeyChecking=no root@${{ secrets.DROPLET_HOST }} \
-            "if grep -q 'LIBRECHAT_JUDGE_API_KEY' /opt/downstream-chat-dashboard/.env 2>/dev/null; then \
-               sed -i 's|^LIBRECHAT_JUDGE_API_KEY=.*|LIBRECHAT_JUDGE_API_KEY=${{ secrets.LIBRECHAT_JUDGE_API_KEY }}|' /opt/downstream-chat-dashboard/.env; \
-             else \
-               echo 'LIBRECHAT_JUDGE_API_KEY=${{ secrets.LIBRECHAT_JUDGE_API_KEY }}' >> /opt/downstream-chat-dashboard/.env; \
-             fi"
-
       - name: Deploy
         run: |
           ssh -o StrictHostKeyChecking=no root@${{ secrets.DROPLET_HOST }} << 'DEPLOY'
           set -e
-          cd /opt/downstream-chat-dashboard
-          git pull origin main
-          docker pull ghcr.io/trash-gurus/downstream-chat-dashboard:latest
-          docker stop langfuse-web || true
-          docker rm langfuse-web || true
-          docker compose -f deploy-compose.yml up -d --no-deps langfuse-web
+          cd /opt/downstream-chat-prod
+          docker compose -f deploy-compose.yml -f docker-compose.override.yml up -d --pull always langfuse-web
           echo "Deploy complete"
           DEPLOY
