@@ -417,6 +417,11 @@ export const env = createEnv({
       .enum(["true", "false"])
       .default("false"),
 
+    // Downstream LLM-as-a-Judge evaluation via LibreChat
+    LIBRECHAT_JUDGE_API_URL: z.string().url().optional(),
+    LIBRECHAT_JUDGE_API_KEY: z.string().optional(),
+    LIBRECHAT_JUDGE_AGENT_ID: z.string().optional(),
+
     // Blocked users for chat completion API (userId:reason format)
     LANGFUSE_BLOCKED_USERIDS_CHATCOMPLETION: z
       .string()
@@ -795,6 +800,9 @@ export const env = createEnv({
       process.env.LANGFUSE_ENABLE_EVENTS_TABLE_V2_APIS,
     LANGFUSE_BLOCKED_USERIDS_CHATCOMPLETION:
       process.env.LANGFUSE_BLOCKED_USERIDS_CHATCOMPLETION,
+    LIBRECHAT_JUDGE_API_URL: process.env.LIBRECHAT_JUDGE_API_URL,
+    LIBRECHAT_JUDGE_API_KEY: process.env.LIBRECHAT_JUDGE_API_KEY,
+    LIBRECHAT_JUDGE_AGENT_ID: process.env.LIBRECHAT_JUDGE_AGENT_ID,
   },
   // Skip validation in Docker builds
   // DOCKER_BUILD is set in Dockerfile

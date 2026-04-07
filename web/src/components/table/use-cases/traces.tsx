@@ -73,6 +73,7 @@ import {
 import { Button } from "@/src/components/ui/button";
 import TableIdOrName from "@/src/components/table/table-id";
 import { useSidebarFilterState } from "@/src/features/filters/hooks/useSidebarFilterState";
+import { RunEvaluationDialog } from "@/src/features/evaluation/components/RunEvaluationDialog";
 import { traceFilterConfig } from "@/src/features/filters/config/traces-config";
 import { DEFAULT_SIDEBAR_IMPLICIT_ENVIRONMENT_CONFIG } from "@/src/features/filters/constants/internal-environments";
 import { PeekViewTraceDetail } from "@/src/components/table/peek/peek-trace-detail";
@@ -441,6 +442,7 @@ export default function TracesTable({
     });
 
   const hasTraceDeletionEntitlement = useHasEntitlement("trace-deletion");
+  const [isEvalDialogOpen, setEvalDialogOpen] = useState(false);
 
   const { selectActionColumn } = TableSelectionManager<TracesTableRow>({
     projectId,
@@ -553,6 +555,16 @@ export default function TracesTable({
         scope: "annotationQueues:CUD",
       },
     },
+    {
+      id: ActionId.TraceRunEvaluation,
+      type: BatchActionType.Create,
+      label: "Run Evaluation",
+      description: "Score selected traces with the LLM judge (correctness, relevance, tool_use).",
+      customDialog: true,
+      accessCheck: {
+        scope: "scores:CUD",
+      },
+    } as TableAction,
   ];
 
   const enableSorting = !hideControls;
@@ -1331,6 +1343,11 @@ export default function TracesTable({
                   projectId={projectId}
                   actions={tableActions}
                   tableName={BatchExportTableName.Traces}
+                  onCustomAction={(actionId) => {
+                    if (actionId === ActionId.TraceRunEvaluation) {
+                      setEvalDialogOpen(true);
+                    }
+                  }}
                 />
               ) : null,
               <BatchExportTableButton
@@ -1425,6 +1442,18 @@ export default function TracesTable({
           </div>
         </ResizableFilterLayout>
         {peekConfig && <TablePeekView peekView={peekConfig} />}
+
+        <RunEvaluationDialog
+          isOpen={isEvalDialogOpen}
+          onClose={() => {
+            setEvalDialogOpen(false);
+            setSelectedRows({});
+          }}
+          projectId={projectId}
+          traceIds={Object.keys(selectedRows).filter((traceId) =>
+            traces.data?.traces.map((t) => t.id).includes(traceId),
+          )}
+        />
       </div>
     </DataTableControlsProvider>
   );
