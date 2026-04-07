@@ -31,7 +31,6 @@ import {
 } from "@langfuse/shared";
 import { randomUUID } from "crypto";
 import { createW3CTraceId } from "../utils";
-import { scheduleExperimentObservationEvals } from "./scheduleExperimentEvals";
 
 async function getExistingRunItemDatasetItemIds(
   projectId: string,
@@ -129,16 +128,6 @@ async function processItem(
   /********************
    * SCHEDULE EXPERIMENT OBSERVATION EVALS *
    ********************/
-
-  if (llmResult.generationDetails) {
-    await scheduleExperimentObservationEvals({
-      projectId,
-      traceId: newTraceId,
-      datasetItem,
-      config,
-      generationDetails: llmResult.generationDetails,
-    });
-  }
 
   /********************
    * ASYNC RUN ITEM EVAL *

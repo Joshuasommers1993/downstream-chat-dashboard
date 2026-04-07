@@ -101,7 +101,6 @@ export const MultiStepExperimentForm = ({
   const steps = [
     { id: "prompt", label: "Prompt & Model" },
     { id: "dataset", label: "Dataset" },
-    { id: "evaluators", label: "Evaluators" },
     { id: "details", label: "Experiment run details" },
     { id: "review", label: "Review" },
   ];
@@ -493,15 +492,6 @@ export const MultiStepExperimentForm = ({
                     selectedPromptName,
                     selectedPromptVersion,
                   }}
-                />
-              )}
-
-              {activeStep === "evaluators" && (
-                <EvaluatorsStep
-                  projectId={projectId}
-                  datasetId={datasetId}
-                  evaluatorState={evaluatorState}
-                  permissions={permissions}
                 />
               )}
 
