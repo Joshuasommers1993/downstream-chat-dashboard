@@ -47,7 +47,7 @@ export function RunEvaluationDialog({
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Run LLM Evaluation</DialogTitle>
+          <DialogTitle>Score Traces</DialogTitle>
           <DialogDescription>
             Score {traceIds.length} trace{traceIds.length !== 1 ? "s" : ""}{" "}
             using the Downstream judge agent. Scores will be added for{" "}
@@ -74,7 +74,7 @@ export function RunEvaluationDialog({
           </Button>
           <Button onClick={handleRun} disabled={runEval.isPending}>
             {runEval.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            {runEval.isPending ? "Evaluating…" : "Run Evaluation"}
+            {runEval.isPending ? "Scoring…" : "Score"}
           </Button>
         </DialogFooter>
       </DialogContent>
