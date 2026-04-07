@@ -55,12 +55,21 @@ jobs:
           key: ${{ secrets.DROPLET_SSH_PRIVATE_KEY }}
           known_hosts: ${{ secrets.DROPLET_KNOWN_HOSTS }}
 
+      - name: Inject judge API key into VPS .env
+        run: |
+          ssh -o StrictHostKeyChecking=no root@${{ secrets.DROPLET_HOST }} \
+            "cd /opt/downstream-chat-dashboard && \
+             grep -q 'LIBRECHAT_JUDGE_API_KEY' .env 2>/dev/null && \
+             sed -i 's|^LIBRECHAT_JUDGE_API_KEY=.*|LIBRECHAT_JUDGE_API_KEY=${{ secrets.LIBRECHAT_JUDGE_API_KEY }}|' .env || \
+             echo 'LIBRECHAT_JUDGE_API_KEY=${{ secrets.LIBRECHAT_JUDGE_API_KEY }}' >> .env"
+
       - name: Deploy
         run: |
           ssh -o StrictHostKeyChecking=no root@${{ secrets.DROPLET_HOST }} << 'DEPLOY'
           set -e
           cd /opt/downstream-chat-dashboard
-          docker compose pull
-          docker compose up -d --force-recreate
+          git pull origin prod
+          docker compose -f deploy-compose.yml pull langfuse-web
+          docker compose -f deploy-compose.yml up -d --force-recreate langfuse-web
           echo "Deploy complete"
           DEPLOY
