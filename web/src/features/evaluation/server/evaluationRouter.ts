@@ -5,6 +5,7 @@ import { env } from "@/src/env.mjs";
 import {
   getTracesByIds,
   upsertScore,
+  convertDateToClickhouseDateTime,
 } from "@langfuse/shared/src/server";
 import { ScoreSourceEnum } from "@langfuse/shared";
 import { v4 as uuidv4 } from "uuid";
@@ -180,7 +181,7 @@ export const evaluationRouter = createTRPCRouter({
                 const now = new Date();
                 await upsertScore({
                   id: uuidv4(),
-                  timestamp: now.toISOString(),
+                  timestamp: convertDateToClickhouseDateTime(now),
                   project_id: input.projectId,
                   environment: trace.environment ?? "default",
                   trace_id: trace.id,
@@ -199,9 +200,9 @@ export const evaluationRouter = createTRPCRouter({
                   queue_id: null,
                   execution_trace_id: null,
                   is_deleted: 0,
-                  created_at: now.toISOString(),
-                  updated_at: now.toISOString(),
-                  event_ts: now.toISOString(),
+                  created_at: convertDateToClickhouseDateTime(now),
+                  updated_at: convertDateToClickhouseDateTime(now),
+                  event_ts: convertDateToClickhouseDateTime(now),
                 });
               } catch (e) {
                 errors.push(`${trace.id}/${metric.name}: ${e instanceof Error ? e.message : String(e)}`);
