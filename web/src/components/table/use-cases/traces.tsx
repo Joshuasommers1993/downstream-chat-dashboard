@@ -558,7 +558,7 @@ export default function TracesTable({
     {
       id: ActionId.TraceRunEvaluation,
       type: BatchActionType.Create,
-      label: "Run Evaluation",
+      label: "Score...",
       description: "Score selected traces with the LLM judge (correctness, relevance, tool_use).",
       customDialog: true,
       accessCheck: {
