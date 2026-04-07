@@ -60,6 +60,7 @@ jobs:
           ssh -o StrictHostKeyChecking=no root@${{ secrets.DROPLET_HOST }} << 'DEPLOY'
           set -e
           cd /opt/downstream-chat-prod
+          docker rm -f langfuse-web || true
           docker compose -f deploy-compose.yml -f docker-compose.override.yml up -d --pull always langfuse-web
           echo "Deploy complete"
           DEPLOY
