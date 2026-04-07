@@ -519,8 +519,8 @@ importers:
         specifier: ^3.13.12
         version: 3.13.12(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@team-plain/typescript-sdk':
-        specifier: ^5.10.3
-        version: 5.10.3
+        specifier: ^5.12.1
+        version: 5.12.1
       '@trpc/client':
         specifier: ^11.13.4
         version: 11.13.4(@trpc/server@11.13.4(typescript@5.9.2))(typescript@5.9.2)
@@ -5297,8 +5297,8 @@ packages:
   '@tanstack/virtual-core@3.13.12':
     resolution: {integrity: sha512-1YBOJfRHV4sXUmWsFSf5rQor4Ss82G8dQWLRbnk3GA4jeP8hQt1hxXh0tmflpC0dz3VgEv/1+qwPyLeWkQuPFA==}
 
-  '@team-plain/typescript-sdk@5.10.3':
-    resolution: {integrity: sha512-ud+pRKjyRzkoSj9o0HqeAVJ2ISuh2ZijugVXQHhklhGZKBzxgUpHfi+e4FrhuyIgZf9AvmliDHaK48gdqyFGKg==}
+  '@team-plain/typescript-sdk@5.12.1':
+    resolution: {integrity: sha512-EgCzFDsRkFcexuOWJMFh99w86E86U5/1VN26Q6Dogtmi2ln5wFHeoJ8/0PQQmDj9GWRI/y63ltlE6I4KN0fvLA==}
 
   '@testing-library/dom@10.0.0':
     resolution: {integrity: sha512-PmJPnogldqoVFf+EwbHvbBJ98MmqASV8kLrBYgsDNxQcFMeIS7JFL48sfyXvuMtgmWO/wMhh25odr+8VhDmn4g==}
@@ -16489,7 +16489,7 @@ snapshots:
 
   '@tanstack/virtual-core@3.13.12': {}
 
-  '@team-plain/typescript-sdk@5.10.3':
+  '@team-plain/typescript-sdk@5.12.1':
     dependencies:
       '@graphql-typed-document-node/core': 3.2.0(graphql@16.13.2)
       ajv: 8.18.0
